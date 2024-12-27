@@ -1,0 +1,51 @@
+import React from "react";
+import { Flex } from "@radix-ui/themes";
+import { Link } from "@tanstack/react-router";
+
+export default function Home() {
+  return (
+    <Flex direction="column" className="min-h-screen">
+      {/* Top Bar */}
+      <Flex
+        align="center"
+        justify="between"
+        className="bg-gray-800 text-white px-6 py-4 shadow-md flex-wrap"
+      >
+        {/* Left Side: App Title */}
+        <h1 className="text-xl font-bold">My App</h1>
+
+        {/* Right Side: Login Button */}
+        <Link
+          to="/login"
+          className="inline-block bg-black text-white px-4 py-2 text-sm font-medium rounded hover:bg-gray-800 transition-colors"
+        >
+          Login
+        </Link>
+      </Flex>
+
+      {/* Main Content */}
+      <Flex className="flex-1">
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          className="flex-1 p-8"
+        >
+          <h1 className="text-3xl font-bold mb-4">Welcome to My App</h1>
+          <p className="text-gray-600 text-center">
+            This is the home page, accessible to everyone.
+          </p>
+        </Flex>
+      </Flex>
+
+      {/* Footer */}
+      <Flex
+        align="center"
+        justify="center"
+        className="bg-gray-100 border-t border-gray-300 text-sm text-gray-600 px-6 py-4"
+      >
+        &copy; {new Date().getFullYear()} My App. All rights reserved.
+      </Flex>
+    </Flex>
+  );
+}
