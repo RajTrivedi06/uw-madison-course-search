@@ -1,116 +1,77 @@
-"use client"; // If you’re on Next.js with the app router
-import React, { useState } from "react";
-import { Link } from "@tanstack/react-router"; // import your own Logo image or text here
+"use client";
+import React from "react";
+import NavLink from "./NavLink";
+import { HomeIcon, LightningBoltIcon, GearIcon } from "@radix-ui/react-icons";
 
-// Example nav links
 const NAV_LINKS = [
-  { id: 0, label: "HOME", to: "/home" },
-  { id: 1, label: "WORK", href: "/work" },
-  { id: 2, label: "CONTACT", href: "/contact" },
+  { id: 0, label: "Home", to: "/home", icon: <HomeIcon /> },
+  {
+    id: 1,
+    label: "Course Search AI",
+    to: "/course-search",
+    icon: <LightningBoltIcon />,
+  },
+  { id: 2, label: "Popular", to: "/popular" },
+  {
+    id: 3,
+    label: "Activities",
+    to: "/activities",
+    icon: <LightningBoltIcon />,
+  },
+];
+
+const SUPPORT_LINKS = [
+  { id: 0, label: "About Us", to: "/about" },
+  { id: 1, label: "Contact Us", to: "/contact", icon: <GearIcon /> },
 ];
 
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleMenu = () => setIsOpen((prev) => !prev);
-
   return (
-    <header className="sticky top-0 z-50 bg-white shadow">
-      <div className="mx-auto max-w-screen-xl px-4 py-3 flex items-center justify-between">
-        {/* Left side: Logo */}
-        <div className="flex items-center gap-2">
-          {/* If you have a Logo image */}
-          {/* <Image src="/logo.png" alt="Logo" width={50} height={50} /> */}
-          {/* Or text-based logo */}
-
-          <span className="font-bold text-xl tracking-wide">Course Search</span>
-        </div>
-
-        {/* Desktop Navigation (hidden on small screens) */}
-        <nav className="hidden md:flex items-center gap-8">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.id}
-              href={link.href}
-              className="text-sm font-medium text-gray-800 hover:text-black transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
-          <Link
-            to="/login"
-            className="inline-block bg-black text-white px-4 py-2 text-sm font-medium rounded hover:bg-gray-800 transition-colors"
-          >
-            Login
-          </Link>
-        </nav>
-
-        {/* Mobile Menu Button (hamburger icon) */}
-        <button
-          type="button"
-          onClick={toggleMenu}
-          className="md:hidden text-gray-700 hover:text-black"
-        >
-          {!isOpen ? (
-            /* Hamburger icon (menu closed) */
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          ) : (
-            /* X icon (menu open) */
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth={2}
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          )}
-        </button>
+    <aside className="flex flex-col bg-white w-64 h-screen shadow-md fixed">
+      {/* Brand Section */}
+      <div className="p-6 flex items-center gap-3">
+        <div className="text-red-500 text-2xl font-bold">TESLA</div>
       </div>
 
-      {/* Mobile Menu (visible when isOpen is true) */}
-      {isOpen && (
-        <nav className="md:hidden bg-white border-t border-gray-200">
-          <div className="flex flex-col px-4 py-3 space-y-3">
-            {NAV_LINKS.map((link) => (
-              <Link
-                key={link.id}
-                href={link.href}
-                className="text-sm font-medium text-gray-800 hover:text-black transition-colors"
-                onClick={() => setIsOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
-            <Link
-              to="/login"
-              className="inline-block bg-black text-white px-4 py-2 text-sm font-medium rounded hover:bg-gray-800 transition-colors text-center"
-              onClick={() => setIsOpen(false)}
-            >
-              LOGIN
-            </Link>
+      {/* Navigation Links */}
+      <nav className="flex-1 px-4 space-y-2">
+        {NAV_LINKS.map((link) => (
+          <NavLink
+            key={link.id}
+            to={link.to}
+            label={link.label}
+            icon={link.icon}
+          />
+        ))}
+      </nav>
+
+      {/* Support Links */}
+      <div className="mt-auto px-4">
+        <div className="border-t border-gray-300 my-4"></div>
+        {SUPPORT_LINKS.map((link) => (
+          <NavLink
+            key={link.id}
+            to={link.to}
+            label={link.label}
+            icon={link.icon}
+          />
+        ))}
+      </div>
+
+      {/* Footer Section */}
+      <footer className="p-4">
+        <div className="flex items-center gap-3">
+          <img
+            src="/profile.jpg" // Replace with your image path
+            alt="Profile"
+            className="h-10 w-10 rounded-full"
+          />
+          <div>
+            <p className="text-sm font-medium">Anuraj Triswamy</p>
+            <p className="text-xs text-gray-500">nohero@mysigns.com</p>
           </div>
-        </nav>
-      )}
-    </header>
+        </div>
+      </footer>
+    </aside>
   );
 }

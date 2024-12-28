@@ -1,55 +1,38 @@
 // src/pages/Home.tsx
 import React from "react";
-import { Box, Flex, Text, Button, Heading } from "@radix-ui/themes";
+import Header from "../components/Header";
+import PopularCourses from "../components/PopularCourses";
+import TopPosts from "../components/TopPosts";
+import DropdownFilter from "../components/DropdownFilter";
 
-const Home = () => {
+const Home: React.FC = () => {
   return (
-    <Box>
-      <Heading size="2" className="mb-6">
-        Welcome to MyApp!
-      </Heading>
-      <Text size="3" color="gray" className="mb-8">
-        This is your dashboard where you can manage your settings and
-        preferences.
-      </Text>
-      <Flex gap="8" className="flex-wrap">
-        {/* Example Cards */}
-        <Box className="w-full md:w-1/2 lg:w-1/3 p-2">
-          <Box className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
-            <Heading size="4" className="mb-3">
-              Card 1
-            </Heading>
-            <Text color="gray" className="mb-4">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-            </Text>
-            <Button variant="outline">Learn More</Button>
-          </Box>
-        </Box>
-        <Box className="w-full md:w-1/2 lg:w-1/3 p-2">
-          <Box className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
-            <Heading size="4" className="mb-3">
-              Card 2
-            </Heading>
-            <Text color="gray" className="mb-4">
-              Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </Text>
-            <Button variant="outline">Learn More</Button>
-          </Box>
-        </Box>
-        <Box className="w-full md:w-1/2 lg:w-1/3 p-2">
-          <Box className="bg-white p-6 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
-            <Heading size="4" className="mb-3">
-              Card 3
-            </Heading>
-            <Text color="gray" className="mb-4">
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco
-              laboris.
-            </Text>
-            <Button variant="outline">Learn More</Button>
-          </Box>
-        </Box>
-      </Flex>
-    </Box>
+    <div>
+      {/* Header */}
+      <Header title="Home" />
+
+      {/* Dropdown Filters */}
+      <div className="mb-6 flex gap-4">
+        <DropdownFilter
+          label="Timeframe"
+          options={["This Month", "Last Month", "Last 6 Months"]}
+        />
+        <DropdownFilter
+          label="People"
+          options={["All", "Friends", "Following"]}
+        />
+        <DropdownFilter
+          label="Topic"
+          options={["All", "AI", "Cars", "Nuclear"]}
+        />
+      </div>
+
+      {/* Popular Courses */}
+      <PopularCourses />
+
+      {/* Top Posts */}
+      <TopPosts />
+    </div>
   );
 };
 

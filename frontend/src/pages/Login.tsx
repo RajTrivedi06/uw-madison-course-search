@@ -1,7 +1,8 @@
 // src/pages/AuthTabs.tsx
-import React from "react";
+import React, { useState } from "react";
 import { Tabs } from "@ark-ui/react/tabs";
 import * as Form from "@radix-ui/react-form";
+import axios from "axios";
 
 export default function AuthTabs() {
   return (
@@ -61,6 +62,56 @@ export default function AuthTabs() {
 /*          Sign Up Section           */
 /* ---------------------------------- */
 function SignUpSection() {
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirm_password: "",
+  });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    // Frontend Validation
+    if (formData.password !== formData.confirm_password) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/users/signup",
+        {
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+        }
+      );
+
+      setSuccess("Sign-up successful! You can now log in.");
+      setFormData({
+        username: "",
+        email: "",
+        password: "",
+        confirm_password: "",
+      });
+    } catch (err: any) {
+      if (err.response && err.response.data && err.response.data.detail) {
+        setError(err.response.data.detail);
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    }
+  };
+
   return (
     <div>
       <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800">
@@ -101,38 +152,31 @@ function SignUpSection() {
       </div>
 
       {/* Sign-Up Form */}
-      <Form.Root>
-        <div className="mb-4 grid grid-cols-2 gap-2">
-          {/* First Name */}
-          <Form.Field name="firstName">
+      <Form.Root onSubmit={handleSubmit}>
+        {error && (
+          <div className="mb-4 rounded bg-red-100 px-4 py-2 text-red-700">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="mb-4 rounded bg-green-100 px-4 py-2 text-green-700">
+            {success}
+          </div>
+        )}
+        <div className="mb-4">
+          {/* Username */}
+          <Form.Field name="username">
             <div className="mb-1">
               <Form.Label className="text-sm font-medium text-gray-700">
-                First name
+                Username
               </Form.Label>
             </div>
             <Form.Control asChild>
               <input
                 type="text"
-                required
-                className="
-                  h-10 w-full rounded border border-gray-300 
-                  px-3 text-sm text-gray-800 outline-none 
-                  focus:ring-1 focus:ring-black
-                "
-              />
-            </Form.Control>
-          </Form.Field>
-
-          {/* Last Name */}
-          <Form.Field name="lastName">
-            <div className="mb-1">
-              <Form.Label className="text-sm font-medium text-gray-700">
-                Last name
-              </Form.Label>
-            </div>
-            <Form.Control asChild>
-              <input
-                type="text"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
                 required
                 className="
                   h-10 w-full rounded border border-gray-300 
@@ -144,63 +188,80 @@ function SignUpSection() {
           </Form.Field>
         </div>
 
-        {/* Email Address */}
-        <Form.Field name="email" className="mb-4 block">
-          <div className="mb-1">
-            <Form.Label className="text-sm font-medium text-gray-700">
-              Wisc Email address
-            </Form.Label>
-          </div>
-          <Form.Control asChild>
-            <input
-              type="email"
-              required
-              className="
-                h-10 w-full rounded border border-gray-300 
-                px-3 text-sm text-gray-800 outline-none 
-                focus:ring-1 focus:ring-black
-              "
-            />
-          </Form.Control>
-        </Form.Field>
+        <div className="mb-4">
+          {/* Email Address */}
+          <Form.Field name="email" className="block">
+            <div className="mb-1">
+              <Form.Label className="text-sm font-medium text-gray-700">
+                Email address
+              </Form.Label>
+            </div>
+            <Form.Control asChild>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="
+                  h-10 w-full rounded border border-gray-300 
+                  px-3 text-sm text-gray-800 outline-none 
+                  focus:ring-1 focus:ring-black
+                "
+              />
+            </Form.Control>
+          </Form.Field>
+        </div>
 
-        <Form.Field name="email" className="mb-4 block">
-          <div className="mb-1">
-            <Form.Label className="text-sm font-medium text-gray-700">
-              Password
-            </Form.Label>
-          </div>
-          <Form.Control asChild>
-            <input
-              type="password"
-              required
-              className="
-                h-10 w-full rounded border border-gray-300 
-                px-3 text-sm text-gray-800 outline-none 
-                focus:ring-1 focus:ring-black
-              "
-            />
-          </Form.Control>
-        </Form.Field>
+        <div className="mb-4">
+          {/* Password */}
+          <Form.Field name="password" className="block">
+            <div className="mb-1">
+              <Form.Label className="text-sm font-medium text-gray-700">
+                Password
+              </Form.Label>
+            </div>
+            <Form.Control asChild>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className="
+                  h-10 w-full rounded border border-gray-300 
+                  px-3 text-sm text-gray-800 outline-none 
+                  focus:ring-1 focus:ring-black
+                "
+              />
+            </Form.Control>
+          </Form.Field>
+        </div>
 
-        <Form.Field name="email" className="mb-4 block">
-          <div className="mb-1">
-            <Form.Label className="text-sm font-medium text-gray-700">
-              Confirm Password
-            </Form.Label>
-          </div>
-          <Form.Control asChild>
-            <input
-              type="confirm_password"
-              required
-              className="
-                h-10 w-full rounded border border-gray-300 
-                px-3 text-sm text-gray-800 outline-none 
-                focus:ring-1 focus:ring-black
-              "
-            />
-          </Form.Control>
-        </Form.Field>
+        <div className="mb-4">
+          {/* Confirm Password */}
+          <Form.Field name="confirm_password" className="block">
+            <div className="mb-1">
+              <Form.Label className="text-sm font-medium text-gray-700">
+                Confirm Password
+              </Form.Label>
+            </div>
+            <Form.Control asChild>
+              <input
+                type="password"
+                name="confirm_password"
+                value={formData.confirm_password}
+                onChange={handleChange}
+                required
+                className="
+                  h-10 w-full rounded border border-gray-300 
+                  px-3 text-sm text-gray-800 outline-none 
+                  focus:ring-1 focus:ring-black
+                "
+              />
+            </Form.Control>
+          </Form.Field>
+        </div>
 
         {/* Submit Button */}
         <Form.Submit asChild>
@@ -223,52 +284,116 @@ function SignUpSection() {
 /*           Log In Section           */
 /* ---------------------------------- */
 function LoginSection() {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setSuccess("");
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/users/login",
+        {
+          email: formData.email,
+          password: formData.password,
+        }
+      );
+
+      const { access_token, token_type } = response.data;
+
+      // Store the token securely
+      sessionStorage.setItem("access_token", access_token);
+
+      setSuccess("Login successful!");
+
+      // Optionally, redirect the user to a protected route
+      // window.location.href = "/dashboard";
+    } catch (err: any) {
+      if (err.response && err.response.data && err.response.data.detail) {
+        setError(err.response.data.detail);
+      } else {
+        setError("An unexpected error occurred.");
+      }
+    }
+  };
+
   return (
     <div>
       <h2 className="mb-6 text-center text-2xl font-semibold text-gray-800">
         Log in
       </h2>
 
-      <Form.Root>
-        {/* Email Field */}
-        <Form.Field name="email" className="mb-4 block">
-          <div className="mb-1">
-            <Form.Label className="text-sm font-medium text-gray-700">
-              Email
-            </Form.Label>
+      {/* Login Form */}
+      <Form.Root onSubmit={handleSubmit}>
+        {error && (
+          <div className="mb-4 rounded bg-red-100 px-4 py-2 text-red-700">
+            {error}
           </div>
-          <Form.Control asChild>
-            <input
-              type="email"
-              required
-              className="
-                h-10 w-full rounded border border-gray-300 
-                px-3 text-sm text-gray-800 outline-none 
-                focus:ring-1 focus:ring-black
-              "
-            />
-          </Form.Control>
-        </Form.Field>
+        )}
+        {success && (
+          <div className="mb-4 rounded bg-green-100 px-4 py-2 text-green-700">
+            {success}
+          </div>
+        )}
+        <div className="mb-4">
+          {/* Email Field */}
+          <Form.Field name="email" className="block">
+            <div className="mb-1">
+              <Form.Label className="text-sm font-medium text-gray-700">
+                Email
+              </Form.Label>
+            </div>
+            <Form.Control asChild>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                className="
+                  h-10 w-full rounded border border-gray-300 
+                  px-3 text-sm text-gray-800 outline-none 
+                  focus:ring-1 focus:ring-black
+                "
+              />
+            </Form.Control>
+          </Form.Field>
+        </div>
 
-        {/* Password Field */}
-        <Form.Field name="password" className="mb-4 block">
-          <div className="mb-1">
-            <Form.Label className="text-sm font-medium text-gray-700">
-              Password
-            </Form.Label>
-          </div>
-          <Form.Control asChild>
-            <input
-              type="password"
-              required
-              className="
-                h-10 w-full rounded border border-gray-300 
-                px-3 text-sm text-gray-800 outline-none 
-                focus:ring-1 focus:ring-black
-              "
-            />
-          </Form.Control>
-        </Form.Field>
+        <div className="mb-4">
+          {/* Password Field */}
+          <Form.Field name="password" className="block">
+            <div className="mb-1">
+              <Form.Label className="text-sm font-medium text-gray-700">
+                Password
+              </Form.Label>
+            </div>
+            <Form.Control asChild>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className="
+                  h-10 w-full rounded border border-gray-300 
+                  px-3 text-sm text-gray-800 outline-none 
+                  focus:ring-1 focus:ring-black
+                "
+              />
+            </Form.Control>
+          </Form.Field>
+        </div>
 
         {/* Submit Button */}
         <Form.Submit asChild>

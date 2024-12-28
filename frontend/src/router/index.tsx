@@ -1,4 +1,5 @@
 // src/router/index.tsx
+import React from "react";
 import {
   createRouter,
   createRoute,
@@ -14,69 +15,58 @@ import CourseSearchAI from "../pages/CourseSearchAI";
 import Popular from "../pages/Popular";
 import Activities from "../pages/Activities";
 
-import HomeLayout from "../layout/HomeLayout"; // Ensure the path is correct
-
-// Define a parent route with HomeLayout
-const homeLayoutRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/",
-  component: HomeLayout,
-});
-
-// Define child routes under homeLayoutRoute
+// Define child routes directly under rootRoute
 const homeRoute = createRoute({
-  getParentRoute: () => homeLayoutRoute,
-  path: "home",
+  getParentRoute: () => rootRoute,
+  path: "", // Default route (equivalent to "/")
   component: Home,
 });
 
 const loginRoute = createRoute({
-  getParentRoute: () => homeLayoutRoute,
+  getParentRoute: () => rootRoute,
   path: "login",
   component: Login,
 });
 
 const aboutRoute = createRoute({
-  getParentRoute: () => homeLayoutRoute,
+  getParentRoute: () => rootRoute,
   path: "about",
   component: About,
 });
 
 const contactRoute = createRoute({
-  getParentRoute: () => homeLayoutRoute,
+  getParentRoute: () => rootRoute,
   path: "contact",
   component: Contact,
 });
 
 const courseSearchAIRoute = createRoute({
-  getParentRoute: () => homeLayoutRoute,
+  getParentRoute: () => rootRoute,
   path: "course-search-ai",
   component: CourseSearchAI,
 });
 
 const popularRoute = createRoute({
-  getParentRoute: () => homeLayoutRoute,
+  getParentRoute: () => rootRoute,
   path: "popular",
   component: Popular,
 });
 
 const activitiesRoute = createRoute({
-  getParentRoute: () => homeLayoutRoute,
+  getParentRoute: () => rootRoute,
   path: "activities",
   component: Activities,
 });
 
 // Assemble the route tree
 const routeTree = rootRoute.addChildren([
-  homeLayoutRoute.addChildren([
-    homeRoute,
-    loginRoute,
-    aboutRoute,
-    contactRoute,
-    courseSearchAIRoute,
-    popularRoute,
-    activitiesRoute,
-  ]),
+  homeRoute, // Default route
+  loginRoute,
+  aboutRoute,
+  contactRoute,
+  courseSearchAIRoute,
+  popularRoute,
+  activitiesRoute,
 ]);
 
 // Create the router

@@ -1,6 +1,5 @@
-// src/components/NavLink.tsx
 import React from "react";
-import { Link, useRouter } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { Text } from "@radix-ui/themes";
 
 interface NavLinkProps {
@@ -11,22 +10,22 @@ interface NavLinkProps {
 }
 
 const NavLink: React.FC<NavLinkProps> = ({ to, icon, label, onClick }) => {
-  const router = useRouter();
-  const currentPath = router.currentRoute?.fullPath || "";
+  const location = useLocation();
+  const currentPath = location.pathname;
   const isActive = currentPath === to;
 
   return (
     <Link
       to={to}
-      className={
+      className={`flex items-center gap-3 text-left px-4 py-2 rounded transition-colors ${
         isActive
-          ? "flex items-center gap-3 text-left bg-gray-700 rounded p-2"
-          : "flex items-center gap-3 text-left p-2 hover:bg-gray-700 hover:rounded transition-colors"
-      }
+          ? "bg-gray-700 text-white"
+          : "text-gray-700 hover:bg-gray-200 hover:text-black"
+      }`}
       onClick={onClick}
     >
       {icon}
-      <Text>{label}</Text>
+      <Text className="text-sm font-medium">{label}</Text>
     </Link>
   );
 };
